@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+{% block title %}Toutes les oeuvres{% endblock %}
+
+{% block body %}
+
+<h1>La liste des oeuvres</h1>
+
+{% if oeuvres is empty %}
+    <p>Aucune oeuvre trouvée</p>
+{% else %}
+    <table border="1" cellpadding="10">
+        <thead>
+            <tr>
+                <th>Titre</th>
+                <th>Date de sortie</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for oeuvre in oeuvres %}
+                <tr>
+                    <td>{{ oeuvre.titre }}</td>
+                    <td>{{ oeuvre.dateSortie | date('d/m/Y H:i:s') }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endif %}
+{% endblock %}
