@@ -6,6 +6,7 @@ use App\Repository\OeuvreRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\DBAL\Types\Types;
 
 #[ORM\Entity(repositoryClass: OeuvreRepository::class)]
 class Oeuvre
@@ -15,25 +16,28 @@ class Oeuvre
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 100)]
+    #[ORM\Column(length: 100, nullable: false)]
     private ?string $titre = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: false)]
     private ?\DateTimeImmutable $dateSortie = null;
 
     #[ORM\ManyToOne(inversedBy: 'oeuvres')]
+    #[ORM\JoinColumn(nullable: false)]
     private ?TypeOeuvre $typeOeuvre = null;
 
     /**
      * @var Collection<int, Categorie>
      */
     #[ORM\ManyToMany(targetEntity: Categorie::class, inversedBy: 'oeuvres')]
+    #[ORM\JoinTable(name: 'oeuvre_categorie')]
     private Collection $categories;
 
     /**
      * @var Collection<int, Auteur>
      */
     #[ORM\ManyToMany(targetEntity: Auteur::class, inversedBy: 'oeuvres')]
+    #[ORM\JoinTable(name: 'oeuvre_auteur')]
     private Collection $auteurs;
 
     /**

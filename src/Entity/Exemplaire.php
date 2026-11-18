@@ -6,6 +6,7 @@ use App\Repository\ExemplaireRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\DBAL\Types\Types;
 
 #[ORM\Entity(repositoryClass: ExemplaireRepository::class)]
 class Exemplaire
@@ -15,13 +16,14 @@ class Exemplaire
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: Types::BOOLEAN, nullable: false)]
     private ?bool $disponibilite = null;
 
-    #[ORM\Column(length: 50)]
+    #[ORM\Column(length: 50, nullable: false)]
     private ?string $codeInventaire = null;
 
     #[ORM\ManyToOne(inversedBy: 'exemplaire')]
+    #[ORM\JoinColumn(nullable: false)]
     private ?Oeuvre $oeuvre = null;
 
     /**
