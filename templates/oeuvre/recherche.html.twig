@@ -12,10 +12,10 @@
 
     {# afficher les résultats #}
     {% if titre %}
-    {% if oeuvres is empty %}
+    {% if oeuvresTrouve is empty %}
         <p>Aucune oeuvre trouvée</p>
     {% else %}
-        {% for oeuvre in oeuvres %}
+        {% for oeuvre in oeuvresTrouve %}
             <h3>Titre : {{ oeuvre.titre }}</h3>
             <p>Date de sortie : {{ oeuvre.dateSortie | date('d/m/Y H:i:s') }}</p>
         {% endfor %}

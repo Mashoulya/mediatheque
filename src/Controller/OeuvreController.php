@@ -2,7 +2,10 @@
 
 namespace App\Controller;
 
+use App\Entity\Oeuvre;
+use App\Form\OeuvreType;
 use App\Repository\OeuvreRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -33,9 +36,80 @@ final class OeuvreController extends AbstractController
         }
 
         return $this->render('oeuvre/recherche.html.twig', [
-            'oeuvres' => $oeuvresTrouve,
+            'oeuvresTrouve' => $oeuvresTrouve,
             'titre' => $titre
         ]);
     }
 
+    #[Route('/oeuvre/{id}', name: 'oeuvre_detail', requirements: ['id' => '\d+'])]
+    public function afficherDetails(int $id, OeuvreRepository $oeuvreRepository): Response
+    {
+        $oeuvre = $oeuvreRepository->find($id);
+
+        if (!$oeuvre) {
+            throw $this->createNotFoundException('Oeuvre introuvable');
+        }
+
+        return $this->render('oeuvre/oeuvreDetails.html.twig', [
+            'oeuvre' => $oeuvre
+        ]);
+    }
+
+    #[Route('/oeuvre/ajouter', name: 'oeuvre_ajout', methods: ['GET', 'POST'])]
+    public function ajouterOeuvre(Request $request, EntityManagerInterface $em): Response 
+    {
+        $oeuvre = new Oeuvre();
+
+        $form = $this->createForm(OeuvreType::class, $oeuvre);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em->persist($oeuvre);
+            $em->flush();
+
+            return $this->redirectToRoute('app_oeuvre');
+        }
+
+        return $this->render('oeuvre/ajouterOeuvre.html.twig', [
+            'form' => $form->createView()
+        ]);
+    }
+
+    #[Route('/oeuvre/{id}/modifier', name: 'oeuvre_modification', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
+    public function modifierOeuvre(int $id, Request $request, EntityManagerInterface $em, OeuvreRepository $oeuvreRepository): Response
+    {
+        $oeuvre = $oeuvreRepository->find($id);
+         if (!$oeuvre) {
+            throw $this->createNotFoundException('Oeuvre introuvable');
+        }
+
+        $form = $this->createForm(OeuvreType::class, $oeuvre);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em->flush();
+            return $this->redirectToRoute('app_oeuvre');
+        }
+        return $this->render('oeuvre/modifierOeuvre.html.twig', [
+            'form' => $form->createView(),
+            'oeuvre' => $oeuvre
+        ]);
+    }
+
+    #[Route('oeuvre/{id}/supprimer', name: 'oeuvre_suppression', requirements: ['id' => '\d+'], methods: ['POST'])]
+    public function supprimerOeuvre(int $id, Request $request, EntityManagerInterface $em, OeuvreRepository $oeuvreRepository): Response
+    {
+         $oeuvre = $oeuvreRepository->find($id);
+         if (!$oeuvre) {
+            throw $this->createNotFoundException('Oeuvre introuvable');
+        }
+        if ($this->isCsrfTokenValid(
+            'delete' . $oeuvre->getId(),
+            $request->request->get('_token')
+        )) {
+            $em->remove($oeuvre);
+            $em->flush();
+        }
+        return $this->redirectToRoute('app_oeuvre');
+    }
 }
