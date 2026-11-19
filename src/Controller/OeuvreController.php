@@ -64,6 +64,9 @@ final class OeuvreController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            if (!$this->isCsrfTokenValid('add_oeuvre', $request->request->get('_token'))) {
+                throw $this->createAccessDeniedException('Invalid CSRF token');
+            }
             $em->persist($oeuvre);
             $em->flush();
 
@@ -87,6 +90,9 @@ final class OeuvreController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            if (!$this->isCsrfTokenValid('edit_' . $oeuvre->getId(), $request->request->get('_token'))) {
+                throw $this->createAccessDeniedException('Invalid CSRF token');
+            }
             $em->flush();
             return $this->redirectToRoute('app_oeuvre');
         }
