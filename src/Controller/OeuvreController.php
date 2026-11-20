@@ -64,13 +64,15 @@ final class OeuvreController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            if (!$this->isCsrfTokenValid('add_oeuvre', $request->request->get('_token'))) {
-                throw $this->createAccessDeniedException('Invalid CSRF token');
-            }
             $em->persist($oeuvre);
             $em->flush();
 
+            $this->addFlash('success', 'Une oeuvre a été enregistrée.');
+
             return $this->redirectToRoute('app_oeuvre');
+
+        } elseif ($form->isSubmitted()){
+            $this->addFlash('error', 'Un problème lors de l\'enregistrement.');
         }
 
         return $this->render('oeuvre/ajouterOeuvre.html.twig', [
@@ -115,6 +117,8 @@ final class OeuvreController extends AbstractController
         )) {
             $em->remove($oeuvre);
             $em->flush();
+
+            $this->addFlash('success', 'Une oeuvre a été supprimée.');
         }
         return $this->redirectToRoute('app_oeuvre');
     }

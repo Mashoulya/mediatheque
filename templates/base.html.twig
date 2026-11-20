@@ -20,6 +20,20 @@
         {% endif %}
     </head>
     <body>
-        {% block body %}{% endblock %}
+        {% for message in app.flashes('success') %}
+            <div class="msg-success">
+                {{ message }}
+            </div>
+        {% endfor %}
+
+        {% for message in app.flashes('error') %}
+            <div class="msg-erreur">
+                {{ message }}
+            </div>
+        {% endfor %}
+        
+        {% block body %}
+        {% endblock %}
+        
     </body>
 </html>

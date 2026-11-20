@@ -32,6 +32,11 @@ class Auteur
         $this->oeuvres = new ArrayCollection();
     }
 
+     public function __toString():string
+    {
+        return ($this->nom ?? '') . ' ' . ($this->prenom ?? '');
+    }
+
     public function getId(): ?int
     {
         return $this->id;
