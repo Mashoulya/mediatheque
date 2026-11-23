@@ -5,12 +5,14 @@ namespace App\Entity;
 use App\Repository\UtilisateurRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UtilisateurRepository::class)]
-class Utilisateur
+class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -46,6 +48,9 @@ class Utilisateur
      */
     #[ORM\OneToMany(targetEntity: Emprunt::class, mappedBy: 'utilisateur')]
     private Collection $emprunts;
+
+    #[ORM\Column(type: Types::JSON)]
+    private array $roles = [];
 
     public function __construct()
     {
@@ -93,7 +98,12 @@ class Utilisateur
         return $this;
     }
 
-    public function getMdp(): ?string
+    public function getUserIdentifier(): string 
+    {
+        return (string) $this->email;
+    }
+
+    public function getPassword(): ?string
     {
         return $this->mdp;
     }
@@ -155,6 +165,21 @@ class Utilisateur
                 $emprunt->setUtilisateur(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getRoles(): array
+    {
+        $roles = $this->roles;
+        // garantir que chaque nouveau User aura min le rôle de l'utilisateur
+        $roles[] = 'ROLE_USER';
+        return array_unique($roles);
+    }
+
+    public function setRoles(array $roles): static
+    {
+        $this->roles = $roles;
 
         return $this;
     }
