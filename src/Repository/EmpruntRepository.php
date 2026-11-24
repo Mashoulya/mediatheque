@@ -3,6 +3,8 @@
 namespace App\Repository;
 
 use App\Entity\Emprunt;
+use App\Entity\Oeuvre;
+use App\Entity\Utilisateur;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -16,6 +18,17 @@ class EmpruntRepository extends ServiceEntityRepository
         parent::__construct($registry, Emprunt::class);
     }
 
+    public function rechercheParUtilisateurEtOeuvre(Utilisateur $utilisateur, Oeuvre $oeuvre): ?Emprunt
+    {
+        return $this->createQueryBuilder('e')
+            ->join('e.exemplaire', 'ex')
+            ->andWhere('e.utilisateur = :utilisateur')
+            ->andWhere('ex.oeuvre = :oeuvre')
+            ->setParameter('utilisateur', $utilisateur)
+            ->setParameter('oeuvre', $oeuvre)  
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 //    /**
 //     * @return Emprunt[] Returns an array of Emprunt objects
 //     */

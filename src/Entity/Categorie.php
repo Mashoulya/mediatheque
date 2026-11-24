@@ -21,7 +21,7 @@ class Categorie
     /**
      * @var Collection<int, Oeuvre>
      */
-    #[ORM\ManyToMany(targetEntity: Oeuvre::class, mappedBy: 'categorie')]
+    #[ORM\ManyToMany(targetEntity: Oeuvre::class, mappedBy: 'categories')]
     private Collection $oeuvres;
 
     public function __construct()

@@ -22,12 +22,16 @@
                     <td>{{ oeuvre.titre }}</td>
                     <td>{{ oeuvre.dateSortie | date('d/m/Y H:i:s') }}</td>
                     <td>
-                        <form action="{{ path('oeuvre_modification', {'id': oeuvre.id}) }}" >
+                        {# <form action="{{ path('oeuvre_modification', {'id': oeuvre.id}) }}" >
                             <button type="submit">Modifier</button>
                         </form>
                          <form action="{{ path('oeuvre_suppression', {'id': oeuvre.id}) }}" method="POST">
                             <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ oeuvre.id) }}">
                             <button type="submit">Supprimer</button>
+                        </form> #}
+                        <form action="{{ path('app_reservation', {'id': oeuvre.id}) }}" method="POST">
+                            <input type="hidden" name="_token" value="{{ csrf_token('reserver_' ~ oeuvre.id) }}">
+                            <button type="submit">Réserver</button>
                         </form>
                     </td>
                 </tr>

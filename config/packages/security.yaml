@@ -40,6 +40,8 @@ security:
         - { path: ^/oeuvre/recherche, roles: PUBLIC_ACCESS}
         - { path: ^/oeuvre/\d+$, roles: PUBLIC_ACCESS}
 
+        # utilisateurs connectés
+        - { path: ^/oeuvre/\d+$/reserver$, roles: ROLE_USER}
 when@test:
     security:
         password_hashers:
