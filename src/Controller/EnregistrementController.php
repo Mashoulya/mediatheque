@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Utilisateur;
+use App\Service\EmailService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,7 +14,7 @@ use Symfony\Component\Routing\Attribute\Route;
 final class EnregistrementController extends AbstractController
 {
     #[Route('/enregistrement', name: 'app_enregistrement')]
-    public function enregistrement(Request $request, EntityManagerInterface $em, UserPasswordHasherInterface $passwordHasher): Response
+    public function enregistrement(Request $request, EntityManagerInterface $em, UserPasswordHasherInterface $passwordHasher, EmailService $emailService): Response
     {
         // on vérifie si la méthode est bien POST et on récupère les données saisies dans les champs
         if ($request->isMethod('POST')) {
@@ -64,6 +65,9 @@ final class EnregistrementController extends AbstractController
             // enregistrer le nouvel utiulisateur dans la bdd
             $em->persist($utilisateur);
             $em->flush();
+
+            // envoyer l'email après la création du compte
+            $emailService->envoyerEmailBienvenue($utilisateur->getEmail());
 
             $this->addFlash('success', 'Votre compte a été créé.');
 
