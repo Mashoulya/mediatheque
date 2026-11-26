@@ -5,7 +5,10 @@
 
 <h1>La liste des oeuvres</h1>
 
-{% if oeuvres is empty %}
+{{ component('RechercheOeuvres') }}
+
+{# Ancien exemple #}
+{# {% if oeuvres is empty %}
     <p>Aucune oeuvre trouvée</p>
 {% else %}
     <table border="1" cellpadding="10">
@@ -21,7 +24,7 @@
                 <tr>
                     <td>{{ oeuvre.titre }}</td>
                     <td>{{ oeuvre.dateSortie | date('d/m/Y H:i:s') }}</td>
-                    <td>
+                    <td> #}
                         {# <form action="{{ path('oeuvre_modification', {'id': oeuvre.id}) }}" >
                             <button type="submit">Modifier</button>
                         </form>
@@ -29,7 +32,7 @@
                             <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ oeuvre.id) }}">
                             <button type="submit">Supprimer</button>
                         </form> #}
-                        <form action="{{ path('app_reservation', {'id': oeuvre.id}) }}" method="POST">
+                        {# <form action="{{ path('app_reservation', {'id': oeuvre.id}) }}" method="POST">
                             <input type="hidden" name="_token" value="{{ csrf_token('reserver_' ~ oeuvre.id) }}">
                             <button type="submit">Réserver</button>
                         </form>
@@ -38,5 +41,5 @@
             {% endfor %}
         </tbody>
     </table>
-{% endif %}
-{% endblock %}
+{% endif %} #}
+{% endblock %} 

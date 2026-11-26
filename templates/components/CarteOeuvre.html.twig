@@ -1,0 +1,9 @@
+<div{{ attributes }} class="carte-oeuvre">
+   <h3>{{ oeuvre.titre}}</h3>
+   <p>Date de sortie : {{ oeuvre.dateSortie|date('Y')}}</p>
+
+   <form action="{{ path('app_reservation', {'id': oeuvre.id}) }}" method="POST">
+        <input type="hidden" name="_token" value="{{ csrf_token('reserver_' ~ oeuvre.id) }}">
+        <button type="submit">Réserver</button>
+    </form>
+</div>

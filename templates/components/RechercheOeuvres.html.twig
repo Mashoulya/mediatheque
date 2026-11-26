@@ -1,0 +1,9 @@
+<div{{ attributes }}>
+    <input type="text" data-model="titre" placeholder="Rechercher une oeuvre...">
+
+    {% for oeuvre in this.oeuvres %}
+        {{ component('CarteOeuvre', {oeuvre: oeuvre}) }}
+    {% else %}
+        <p>Aucune oeuvre trouvée.</p>
+    {% endfor %}
+</div>
